@@ -12,6 +12,19 @@ public class Account {
     private List<AccountStatement> accountStatmentList;
     private double balance;
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Account)) {
+            return false;
+        }
+
+        Account account = (Account) o;
+
+        return account.idAccount.equals(idAccount);
+    }
+
 
 
 }

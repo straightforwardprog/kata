@@ -19,10 +19,13 @@ public class AccountServiceImp implements AccountService {
     @Override
     public AccountStatement depoAccount(Statement statement, long idAccount, double amount)  {
         Optional<Account> c=History.accountStatementList.keySet().stream().filter(a->a.getIdAccount()==idAccount).findFirst();
-        c.ifPresent(account ->{
-            accountStatement= AccountStatement.builder().amount(amount).date(LocalDateTime.now()).balance(account.getBalance()+amount).st(statement.getName()).build();
+        if(c.isPresent()){
+            Account account=c.get();
+            account.setBalance(account.getBalance()+amount);
+            accountStatement= AccountStatement.builder().amount(amount).date(LocalDateTime.now()).balance(account.getBalance()).st(statement.getName()).build();
             History.accountStatementList.get(account).add(accountStatement);
-        });
+
+        }
 
         return accountStatement;
     }
@@ -30,16 +33,19 @@ public class AccountServiceImp implements AccountService {
     @Override
     public AccountStatement retreveAccount(Statement statement, long idAccount, double amount, boolean all) {
         Optional<Account> c=History.accountStatementList.keySet().stream().filter(a->a.getIdAccount()==idAccount).findFirst();
-        if (all){
-            c.ifPresent(account ->{
-                accountStatement= AccountStatement.builder().amount(account.getBalance()).date(LocalDateTime.now()).balance(0).st(statement.getName()).build();
-                History.accountStatementList.get(account).add(accountStatement);
-            });
-        }else{
-            c.ifPresent(account ->{
-                accountStatement= AccountStatement.builder().amount(amount).date(LocalDateTime.now()).balance(account.getBalance()-amount).st(statement.getName()).build();
-                History.accountStatementList.get(account).add(accountStatement);
-            });
+        if(c.isPresent()) {
+            Account account=c.get();
+            if (all) {
+                    accountStatement = AccountStatement.builder().amount(account.getBalance()).date(LocalDateTime.now()).balance(0).st(statement.getName()).build();
+                    History.accountStatementList.get(account).add(accountStatement);
+                    account.setBalance(0);
+
+            } else {
+                    account.setBalance(account.getBalance() - amount);
+                    accountStatement = AccountStatement.builder().amount(amount).date(LocalDateTime.now()).balance(account.getBalance()).st(statement.getName()).build();
+                    History.accountStatementList.get(account).add(accountStatement);
+
+            }
         }
 
 
