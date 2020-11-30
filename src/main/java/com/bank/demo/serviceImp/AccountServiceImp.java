@@ -31,7 +31,7 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public AccountStatement retreveAccount(Statement statement, long idAccount, double amount, boolean all) {
+    public AccountStatement retrieveAccount(Statement statement, long idAccount, double amount, boolean all) {
         Optional<Account> c=History.accountStatementList.keySet().stream().filter(a->a.getIdAccount()==idAccount).findFirst();
         if(c.isPresent()) {
             Account account=c.get();

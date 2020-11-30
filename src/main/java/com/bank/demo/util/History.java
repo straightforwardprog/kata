@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for storing account operations
+ */
 public class History {
+
     public static Map<Account, List<AccountStatement>> accountStatementList=new HashMap<Account, List<AccountStatement>>();
     static {
         accountStatementList.put(Account.builder().idAccount(1999999991L).build(),new ArrayList<AccountStatement>());

@@ -1,7 +1,13 @@
 package com.bank.demo;
 
+import com.bank.demo.model.Account;
+import com.bank.demo.model.AccountStatement;
+import com.bank.demo.util.History;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @SpringBootApplication
 public class KataApplication {
