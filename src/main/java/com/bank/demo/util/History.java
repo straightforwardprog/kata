@@ -2,7 +2,10 @@ package com.bank.demo.util;
 
 import com.bank.demo.model.Account;
 import com.bank.demo.model.AccountStatement;
+import lombok.Data;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,12 +14,14 @@ import java.util.Map;
 /**
  * Class for storing account operations
  */
+@Component
 public class History {
 
-    public static Map<Account, List<AccountStatement>> accountStatementList=new HashMap<Account, List<AccountStatement>>();
-    static {
-        accountStatementList.put(Account.builder().idAccount(1999999991L).build(),new ArrayList<AccountStatement>());
-        accountStatementList.put(Account.builder().idAccount(1999999992L).build(),new ArrayList<AccountStatement>());
-        accountStatementList.put(Account.builder().idAccount(1999999993L).build(),new ArrayList<AccountStatement>());
+    public final Map<Long, Account> accountStatementList=new HashMap<Long, Account>();
+     {
+        accountStatementList.put(1999999991L,Account.builder().idAccount(1999999991L).balance(new BigDecimal(0)).accountStatmentList(new ArrayList<AccountStatement>()).build());
+        accountStatementList.put(1999999992L,Account.builder().idAccount(1999999992L).balance(new BigDecimal(0)).accountStatmentList(new ArrayList<AccountStatement>()).build());
+        accountStatementList.put(1999999992L,Account.builder().idAccount(1999999993L).balance(new BigDecimal(0)).accountStatmentList(new ArrayList<AccountStatement>()).build());
     }
+
 }

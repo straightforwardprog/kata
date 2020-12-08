@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 public class KataApplication {

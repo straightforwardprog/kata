@@ -1,60 +1,37 @@
 package com.bank.demo.serviceImp;
 
-import com.bank.demo.model.Account;
 import com.bank.demo.model.AccountStatement;
+import com.bank.demo.repository.AccountRepository;
 import com.bank.demo.service.AccountService;
-import com.bank.demo.util.History;
 import com.bank.demo.util.Statement;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class AccountServiceImp implements AccountService {
-    AccountStatement accountStatement;
+    private AccountRepository accountRepository;
+
     @Override
-    public AccountStatement depoAccount(Statement statement, long idAccount, double amount)  {
-        Optional<Account> c=History.accountStatementList.keySet().stream().filter(a->a.getIdAccount()==idAccount).findFirst();
-        if(c.isPresent()){
-            Account account=c.get();
-            account.setBalance(account.getBalance()+amount);
-            accountStatement= AccountStatement.builder().amount(amount).date(LocalDateTime.now()).balance(account.getBalance()).st(statement.getName()).build();
-            History.accountStatementList.get(account).add(accountStatement);
-
-        }
-
-        return accountStatement;
+    public AccountStatement depositAccount(Statement statement, long idAccount, BigDecimal amount) {
+        return accountRepository.depositAccount(statement.name(),idAccount,amount);
     }
 
     @Override
-    public AccountStatement retrieveAccount(Statement statement, long idAccount, double amount, boolean all) {
-        Optional<Account> c=History.accountStatementList.keySet().stream().filter(a->a.getIdAccount()==idAccount).findFirst();
-        if(c.isPresent()) {
-            Account account=c.get();
-            if (all) {
-                    accountStatement = AccountStatement.builder().amount(account.getBalance()).date(LocalDateTime.now()).balance(0).st(statement.getName()).build();
-                    History.accountStatementList.get(account).add(accountStatement);
-                    account.setBalance(0);
+    public AccountStatement withdrawalAccount(Statement statement, long idAccount, BigDecimal amount) {
+        return accountRepository.withdrawalAccount(statement.name(),idAccount,amount);
+    }
 
-            } else {
-                    account.setBalance(account.getBalance() - amount);
-                    accountStatement = AccountStatement.builder().amount(amount).date(LocalDateTime.now()).balance(account.getBalance()).st(statement.getName()).build();
-                    History.accountStatementList.get(account).add(accountStatement);
-
-            }
-        }
-
-
-        return accountStatement;
+    @Override
+    public AccountStatement withdrawalALLAccount(Statement statement, long idAccount) {
+        return accountRepository.withdrawalAllAccount(statement.name(),idAccount);
     }
 
     @Override
     public List<AccountStatement> getHistory(long idAccount) {
-        Optional<Account> c=History.accountStatementList.keySet().stream().filter(a->a.getIdAccount()==idAccount).findFirst();
-        return History.accountStatementList.get(c.get());
+        return accountRepository.getHistory(idAccount);
     }
 }

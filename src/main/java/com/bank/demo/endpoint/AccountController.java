@@ -5,12 +5,21 @@ import com.bank.demo.model.AccountStatement;
 import com.bank.demo.service.AccountService;
 import com.bank.demo.util.Statement;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api")
+@Validated
 public class AccountController {
     private AccountService accountService;
 
@@ -20,8 +29,8 @@ public class AccountController {
      * @return
      */
     @PostMapping("/deposit")
-    public AccountStatement depoAccount(@RequestBody AccountRequest accountRequest){
-        return accountService.depoAccount(Statement.Deposit,accountRequest.getIdAccount(),accountRequest.getAmount());
+    public ResponseEntity<AccountStatement> depositAccount(@Valid @RequestBody AccountRequest accountRequest){
+        return ResponseEntity.ok(accountService.depositAccount(Statement.Deposit,accountRequest.getIdAccount(),accountRequest.getAmount()));
     }
 
     /**
@@ -29,9 +38,18 @@ public class AccountController {
      * @param accountRequest
      * @return
      */
-    @PostMapping("/retrieve")
-    public AccountStatement retreiveAccount(@RequestBody AccountRequest accountRequest){
-        return accountService.retrieveAccount(Statement.Retrieve,accountRequest.getIdAccount(),accountRequest.getAmount(),accountRequest.isAll());
+    @PostMapping("/withdrawal")
+    public ResponseEntity<AccountStatement> withdrawalAccount(@Valid @RequestBody AccountRequest accountRequest){
+        return  ResponseEntity.ok(accountService.withdrawalAccount(Statement.Withdrawal,accountRequest.getIdAccount(),accountRequest.getAmount()));
+    }
+    /**
+     *  US 2
+     * @param accountRequest
+     * @return
+     */
+    @PostMapping("/withdrawalALL")
+    public ResponseEntity<AccountStatement> withdrawalALLAccount(@Valid @RequestBody AccountRequest accountRequest){
+        return  ResponseEntity.ok(accountService.withdrawalALLAccount(Statement.Withdrawal,accountRequest.getIdAccount()));
     }
 
     /**
@@ -40,7 +58,7 @@ public class AccountController {
      * @return
      */
     @GetMapping("/history/{id}")
-    public List<AccountStatement> getHistory(@PathVariable(value = "id")long id){
-        return accountService.getHistory(id);
+    public ResponseEntity<List<AccountStatement>> getHistory(@PathVariable(value = "id")long id){
+        return  ResponseEntity.ok(accountService.getHistory(id));
     }
 }
